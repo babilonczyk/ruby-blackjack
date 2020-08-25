@@ -225,7 +225,115 @@ RSpec.describe Blackjack do
       expect(@blackjack.show_hands).to match(/Total value:/)
     end
 
+  end
 
+  describe "results" do
+
+    it "should display the correct value when the player lose" do
+      card_1 = Card.new("Hearts", "10")
+      card_2 = Card.new("Spades", "10")
+      card_3 = Card.new("Hearts", "2")
+
+      card_4 = Card.new("Spades", "4")
+      card_5 = Card.new("Hearts", "7")
+      card_6 = Card.new("Hearts", "Queen")
+
+      new_deck = [card_6, card_3, card_2, card_5, card_1, card_4]
+
+      @blackjack = Blackjack.new(SUITS, RANKS)
+
+      @blackjack.deck.replace_with new_deck
+      @blackjack.deal
+      @blackjack.hit
+
+      expect(@blackjack.set_results).to eq("Player lost")
+    end
+
+    it "should display the correct value when the dealer lose" do
+      card_1 = Card.new("Hearts", "10")
+      card_2 = Card.new("Spades", "4")
+      card_3 = Card.new("Hearts", "Jack")
+
+      card_4 = Card.new("Spades", "2")
+      card_5 = Card.new("Hearts", "7")
+      card_6 = Card.new("Hearts", "Queen")
+
+      new_deck = [card_3, card_6, card_5, card_2, card_4, card_1]
+
+      @blackjack = Blackjack.new(SUITS, RANKS)
+
+      @blackjack.deck.replace_with new_deck
+      @blackjack.deal
+      @blackjack.stand
+
+      expect(@blackjack.set_results).to eq("Dealer lost")
+    end
+
+    it "should display the correct value when the player and dealer have a tie" do
+      card_1 = Card.new("Hearts", "10")
+      card_2 = Card.new("Spades", "Jack")
+      card_3 = Card.new("Spades", "Ace")
+
+      card_4 = Card.new("Spades", "10")
+      card_5 = Card.new("Hearts", "Jack")
+      card_6 = Card.new("Hearts", "Ace")
+
+      new_deck = [card_3, card_6, card_5, card_2, card_4, card_1]
+
+      @blackjack = Blackjack.new(SUITS, RANKS)
+
+      @blackjack.deck.replace_with new_deck
+      @blackjack.deal
+      @blackjack.hit
+      @blackjack.stand
+      @blackjack.hit
+
+      expect(@blackjack.set_results).to eq("It is a tie")
+    end
+
+    it "should display the correct value when the player wins" do
+      card_1 = Card.new("Hearts", "10")
+      card_2 = Card.new("Spades", "Jack")
+      card_3 = Card.new("Spades", "Ace")
+
+      card_4 = Card.new("Spades", "10")
+      card_5 = Card.new("Hearts", "9")
+      card_6 = Card.new("Hearts", "Ace")
+
+      new_deck = [card_6, card_3, card_2, card_5, card_1, card_4]
+
+      @blackjack = Blackjack.new(SUITS, RANKS)
+
+      @blackjack.deck.replace_with new_deck
+      @blackjack.deal
+      @blackjack.hit
+      @blackjack.stand
+      @blackjack.hit
+
+      expect(@blackjack.set_results).to eq("Player won")
+    end
+
+    it "should display the correct value when the dealer wins" do
+      card_1 = Card.new("Hearts", "10")
+      card_2 = Card.new("Spades", "9")
+      card_3 = Card.new("Spades", "Ace")
+
+      card_4 = Card.new("Spades", "10")
+      card_5 = Card.new("Clubs", "10")
+      card_6 = Card.new("Hearts", "Ace")
+
+      new_deck = [card_6, card_3, card_2, card_5, card_1, card_4]
+
+      @blackjack = Blackjack.new(SUITS, RANKS)
+
+      @blackjack.deck.replace_with new_deck
+      @blackjack.deal
+      @blackjack.hit
+      @blackjack.stand
+      @blackjack.hit
+
+      expect(@blackjack.set_results).to eq("Dealer won")
+    end
 
   end
 

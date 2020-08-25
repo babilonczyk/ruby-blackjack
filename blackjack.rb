@@ -56,7 +56,7 @@ class Blackjack
         dealer_hand.dealt_cards.first.show = true
       end
 
-      unless dealer_hand.get_cards_value > 17
+      unless dealer_hand.get_cards_value >= 17
         hit
       end
     end
@@ -67,7 +67,19 @@ class Blackjack
   end
 
   def set_results
-
+      if player_hand.get_cards_value > 21 && dealer_hand.get_cards_value < 21
+        @outcome = "Player lost"
+      elsif dealer_hand.get_cards_value > 21 && player_hand.get_cards_value < 21
+        @outcome = "Dealer lost"
+      elsif current_player == "Dealer"
+        if dealer_hand.get_cards_value == player_hand.get_cards_value
+          @outcome = "It is a tie"
+        elsif player_hand.get_cards_value > dealer_hand.get_cards_value
+          @outcome = "Player won"
+        elsif dealer_hand.get_cards_value > player_hand.get_cards_value
+          @outcome = "Dealer won"
+        end
+      end
   end
 
 =begin
