@@ -93,4 +93,140 @@ RSpec.describe Blackjack do
 
   end
 
+  describe "hit cards" do
+
+    before do
+      @blackjack.deal
+      @dealer_cards = @blackjack.dealer_hand.dealt_cards
+      @player_cards = @blackjack.player_hand.dealt_cards
+    end
+
+    it "should hit card if playing is true" do
+      expect(@blackjack.playing).to eq(true)
+    end
+
+    it "should return 2 cards for dealer but after using hit player will have 3 cards" do
+      @blackjack.hit
+
+      expect(@dealer_cards.count).to eq(2)
+      expect(@player_cards.count).to eq(3)
+    end
+
+    it "ends game if player has lost" do
+      card_1 = Card.new("Hearts", "9")
+      card_2 = Card.new("Spades", "3")
+      card_3 = Card.new("Hearts", "4")
+
+      card_4 = Card.new("Spades", "10")
+      card_5 = Card.new("Hearts", "10")
+      card_6 = Card.new("Hearts", "Queen")
+
+      @blackjack = Blackjack.new(SUITS, RANKS)
+
+      new_deck = [card_4, card_3, card_5, card_2, card_6, card_1]
+
+      @blackjack.deck.replace_with new_deck
+
+      @blackjack.deal
+      @blackjack.hit
+
+      expect(@blackjack.player_hand.get_cards_value).to eq(24)
+      expect(@blackjack.outcome).to eq("Player lost")
+    end
+
+    it "ends game if dealer has lost" do
+      card_1 = Card.new("Hearts", "9")
+      card_2 = Card.new("Spades", "3")
+      card_3 = Card.new("Hearts", "Ace")
+
+      card_4 = Card.new("Spades", "10")
+      card_5 = Card.new("Hearts", "10")
+      card_6 = Card.new("Hearts", "Queen")
+
+      @blackjack = Blackjack.new(SUITS, RANKS)
+
+      new_deck = [card_4, card_3, card_5, card_2, card_6, card_1]
+
+      @blackjack.deck.replace_with new_deck
+
+      @blackjack.deal
+      @blackjack.hit
+
+      @blackjack.current_player = "Dealer"
+      @blackjack.hit
+
+      expect(@blackjack.player_hand.get_cards_value).to eq(21)
+      expect(@blackjack.outcome).to eq("Dealer lost")
+    end
+  end
+
+  describe "stand" do
+    before do
+      @blackjack = Blackjack.new(SUITS, RANKS)
+    end
+
+    it "Turn swiches to Dealer when players stands " do
+
+      card_1 = Card.new("Hearts", "4")
+      card_2 = Card.new("Spades", "3")
+      card_3 = Card.new("Hearts", "Ace")
+
+      card_4 = Card.new("Spades", "2")
+      card_5 = Card.new("Hearts", "7")
+      card_6 = Card.new("Hearts", "5")
+
+      @blackjack = Blackjack.new(SUITS, RANKS)
+
+      new_deck = [card_4, card_3, card_5, card_2, card_6, card_1]
+
+      @blackjack.deck.replace_with new_deck
+
+      @blackjack.deal
+      @blackjack.hit
+      @blackjack.stand
+
+      expect(@blackjack.current_player).to eq("Dealer")
+
+    end
+
+    it "automaticly hits if dealer hand value is less than 17 and makes first card face up" do
+
+      card_1 = Card.new("Hearts", "9")
+      card_2 = Card.new("Spades", "3")
+      card_3 = Card.new("Hearts", "Ace")
+
+      card_4 = Card.new("Spades", "2")
+      card_5 = Card.new("Hearts", "7")
+      card_6 = Card.new("Hearts", "Queen")
+
+      new_deck = [card_4, card_3, card_5, card_2, card_6, card_1]
+
+      @blackjack.deck.replace_with new_deck
+      @blackjack.deal
+      expect(@blackjack.dealer_hand.get_cards_value).to eq(12)
+      @blackjack.hit #player hits
+      @blackjack.stand #player stands
+      expect(@blackjack.dealer_hand.get_cards_value).to eq(14)
+      expect(@blackjack.dealer_hand.dealt_cards.first.show).to eq(true)
+
+    end
+  end
+
+  describe "show hands" do
+
+    before do
+      @blackjack.deal
+    end
+
+    it "displays gamers hands" do
+      expect(@blackjack.show_hands).to match(/Player's hand:/)
+      expect(@blackjack.show_hands).to match(/Total value:/)
+      expect(@blackjack.show_hands).to match(/Dealer's hand:/)
+      expect(@blackjack.show_hands).to match(/Total value:/)
+    end
+
+
+
+  end
+
 end

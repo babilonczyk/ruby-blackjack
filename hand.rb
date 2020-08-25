@@ -1,3 +1,5 @@
+require_relative 'card'
+
 class Hand
 
   attr_accessor :dealt_cards
@@ -8,6 +10,16 @@ class Hand
 
   def add_card( card )
     @dealt_cards << card
+  end
+
+  def to_s
+    res = ''
+
+    @dealt_cards.each do |card|
+      res += "#{card.rank} #{card.suit}, "
+    end
+
+    res
   end
 
   def get_cards_value

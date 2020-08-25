@@ -4,7 +4,7 @@ require_relative 'hand'
 class Blackjack
 
   attr_reader :player_hand, :dealer_hand, :deck, :playing
-  attr_accessor :current_player
+  attr_accessor :current_player, :outcome
 
   def initialize( suits, ranks )
     @player_hand = nil
@@ -12,7 +12,8 @@ class Blackjack
     @deck = Deck.new( suits, ranks )
     @deck.shuffle
     @playing = false
-    @current_player = ''
+    @current_player = 'Player'
+    @outcome = ""
   end
 
   def deal
@@ -39,19 +40,57 @@ class Blackjack
   end
 
   def hit
-
+    if @playing
+      if current_player == "Player"
+        add_new_card(player_hand)
+      elsif  current_player == "Dealer"
+        add_new_card(dealer_hand)
+      end
+    end
   end
 
   def stand
+    if @playing
+      if current_player == "Player"
+        @current_player = "Dealer"
+        dealer_hand.dealt_cards.first.show = true
+      end
 
+      unless dealer_hand.get_cards_value > 17
+        hit
+      end
+    end
   end
 
   def show_hands
-
+     "Player's hand: #{player_hand.to_s}\nTotal value: #{player_hand.get_cards_value}\nDealer's hand: #{dealer_hand.to_s}\nTotal value: #{dealer_hand.get_cards_value}"
   end
 
   def set_results
 
+  end
+
+=begin
+  def to_s
+    puts "\n[PLAYER]"
+    puts "Dealt cards: #{player_hand.dealt_cards.count}"
+    puts "Player hand: #{player_hand.get_cards_value}\n\n"
+
+    puts "[DEALER]"
+    puts "Dealt cards: #{dealer_hand.dealt_cards.count}"
+    puts "Dealer hand: #{dealer_hand.get_cards_value} \n\n"
+  end
+=end
+
+  private
+
+  def add_new_card( hand )
+    hand.add_card(@deck.deal_card)
+
+    if hand.get_cards_value > 21
+      @outcome = "#{current_player} lost"
+      @playing = false
+    end
   end
 
 end
