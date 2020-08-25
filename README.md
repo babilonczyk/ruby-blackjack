@@ -1,5 +1,7 @@
 # ruby-blackjack
 
+Update 25.08.2020
+
 Blackjack Game made in ruby using RSpec. The main objective was to practice TDD testing using RSpec. 
 Probably in the future I will use Rails to build something more advanced. However it isn't my main goal for this project right now.
 
